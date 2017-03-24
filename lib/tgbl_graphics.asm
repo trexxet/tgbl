@@ -78,29 +78,29 @@ tgbl_getVRAMAddr:
 ; Args: upper corner row, column, height, char, color
 ; Spoils AX, DI
 %macro tgblm_drawVerticalLine 5
-_tgblm_drawVerticalLine:
+%%tgblm_drawVerticalLine:
 	mov al, %4
 	mov ah, %5
 	mov di, (%1) * vramWidth + (%2) * 2
-	.line:
+	%%line:
 		mov word [es:di], ax
 		add di, vramWidth
 		cmp di, ((%1) + (%3)) * vramWidth + (%2) * 2
-		jb .line
+		jb %%line
 %endmacro
 
 ; Draw horizontal line
 ; Args: row, left corner column, width, char, color
 ; Spoils AX, DI
 %macro tgblm_drawHorizontalLine 5
-_tgblm_drawHorizontalLine:
+%%tgblm_drawHorizontalLine:
 	mov al, %4
 	mov ah, %5
 	mov di, (%1) * vramWidth + (%2) * 2
-	.line:
+	%%line:
 		stosw
 		cmp di, (%1) * vramWidth + ((%2) + (%3)) * 2
-		jb .line
+		jb %%line
 %endmacro
 
 ; Draw custom border
@@ -109,7 +109,7 @@ _tgblm_drawHorizontalLine:
 ;	upper right corner, lower left corner, lower right corner, color
 ; Spoils AX, DI
 %macro tgblm_drawCustomBorder 11
-_tgblm_drawCustomBorder:
+%%tgblm_drawCustomBorder:
 	mov ah, (%11)
 	mov di, (%1) * vramWidth + (%2) * 2
 	; Draw upper left corner
@@ -117,10 +117,10 @@ _tgblm_drawCustomBorder:
 	stosw
 	; Draw upper line
 	mov al, (%5)
-	.upper:
+	%%upper:
 		stosw
 		cmp di, (%1) * vramWidth + ((%2) + (%4) - 1) * 2
-		jb .upper
+		jb %%upper
 	; Draw upper right corner
 	mov al, (%8)
 	mov word [es:di], ax
@@ -130,23 +130,23 @@ _tgblm_drawCustomBorder:
 	stosw
 	; Draw lower line
 	mov al, (%5)
-	.lower:
+	%%lower:
 		stosw
 		cmp di, ((%1) + (%3) - 1) * vramWidth + ((%2) + (%4) - 1) * 2
-		jb .lower
+		jb %%lower
 	; Draw lower right corner
 	mov al, (%10)
 	mov word [es:di], ax
 	; Draw side lines
 	mov al, (%6)
 	mov di, ((%1) + 1) * vramWidth + (%2) * 2
-	.side:
+	%%side:
 		mov word [es:di], ax
 		add di, ((%4) - 1) * 2
 		mov word [es:di], ax
 		add di, vramWidth - ((%4) - 1) * 2
 		cmp di, ((%1) + (%3) - 2) * vramWidth + ((%2) + (%4)) * 2
-		jb .side
+		jb %%side
 %endmacro
 
 ; Draw self border
