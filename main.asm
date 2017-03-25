@@ -1,30 +1,12 @@
-org 0x7C00
-bits 16
-section .text
+%define NUM_OF_USER_SECTORS 1
+%define INCLUDE_GRAPHICS
+%define INCLUDE_TEXT
+%define INCLUDE_KEYBOARD
+%define INCLUDE_TIME
+%include "lib/tgbl_main.asm"
+tgblm_start main
 
-; Fill sectors with zeroes
-%macro fill 2
-	times 512 * %1 - ($ - %2) db 0
-%endmacro
-
-; SECTOR 1 - BOOTSECTOR
-%include "lib/tgbl_boot.asm"
-tgblm_boot 4
-
-; SECTOR 2 - GRAPHICAL, TEXT & TIME FUNCTIONS
-sector2:
-jmp main
-%include "lib/tgbl_graphics.asm"
-%include "lib/tgbl_text.asm"
-%include "lib/tgbl_time.asm"
-fill 1, sector2
-
-; SECTOR 3 - KEYBOARD ROUTINES
-sector3:
-%include "lib/tgbl_keyboard.asm"
-fill 1, sector3
-
-; SECTOR 4 - MAIN SECTOR
+; Your program starts here
 main:
 	call tgbl_initVGA
 	tgblm_hideCursor
@@ -97,17 +79,18 @@ drawText:
 	tgblm_printString sampleText3, FG_LGRAY, scrHMid + 2, scrWMid -  sampleText3_len / 2
 	ret
 
-fill 1, main
+; Fills the rest of sector with zeroes
+tgblm_endSector 1, main
 
-; SECTOR 5 - Constants
-sector5:
+; Constants
+constSector:
 tgblm_addConstString sampleText1, "Press ESC to shutdown"
 tgblm_addConstString sampleText2, "Press Q to change this text"
 tgblm_addConstString sampleText3, "Press A or S to change the number above"
 
-fill 1, sector5
+tgblm_endSector 1, constSector
 
 ; Variables
 section .bss
 sampleNum resw 1
-sampleNumStr resb 10
+sampleNumStr resb 6
