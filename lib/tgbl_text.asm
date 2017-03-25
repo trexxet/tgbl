@@ -37,27 +37,39 @@ tgbl_printString:
 	stosw
 %endmacro
 
-; Convert Hex to Dec ASCII
+; Clear string on screen
+; Args: row, column, width
+; Spois: AX, DI
+%macro tgblm_clearString 3
+	xor ax, ax
+	mov di, ((%1) * vramWidth) + ((%2) * 2)
+	%%line:
+		stosw
+		cmp di, (%1) * vramWidth + ((%2) + (%3)) * 2
+		jb %%line
+%endmacro
+
+; Convert number in memory to decimal ASCII string
 ; Args: source address, destination address
 ; Spoils AX, BX, DX, SI, DI
-%macro tgblm_hexWordToDecASCII 2
+%macro tgblm_numWordToDecASCII 2
 	mov si, %1
 	mov di, %2
 	mov ax, [si]
-	call tgbl_hexToDecASCII
+	call tgbl_numToDecASCII
 %endmacro
-%macro tgblm_hexByteToDecASCII 2
+%macro tgblm_numByteToDecASCII 2
 	mov si, %1
 	mov di, %2
 	movzx ax, byte [si]
-	call tgbl_hexToDecASCII
+	call tgbl_numToDecASCII
 %endmacro
 %macro setOffset 1
 	cmp ax, %1
 	jb .offsetSet
 	inc di
 %endmacro
-tgbl_hexToDecASCII:
+tgbl_numToDecASCII:
 	; Set offset for printing
 	setOffset 10
 	setOffset 100

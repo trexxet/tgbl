@@ -1,47 +1,47 @@
 ; TGBL graphical functions and macros
 
 ; Width and height of screen
-scrHeight	equ 25
-scrWidth	equ 80
-scrHMid		equ 12
-scrWMid		equ 40
-vramWidth 	equ 160
+scrHeight   equ 25
+scrWidth    equ 80
+scrHMid     equ 12
+scrWMid     equ 40
+vramWidth   equ 160
 
 ; Background colors
-BG_BLACK	equ 0x00
-BG_BLUE		equ 0x10
-BG_GREEN	equ 0x20
-BG_CYAN		equ 0x30
-BG_RED		equ 0x40
-BG_MAGENTA	equ 0x50
-BG_BROWN	equ 0x60
-BG_LGRAY	equ 0x70
-BG_DGRAY	equ 0x80
-BG_LBLUE	equ 0x90
-BG_LGREEN	equ 0xA0
-BG_LCYAN	equ 0xB0
-BG_LRED		equ 0xC0
-BG_LMAGENTA	equ 0xD0
-BG_YELLOW	equ 0xE0
-BG_WHITE	equ 0xF0
+BG_BLACK    equ 0x00
+BG_BLUE     equ 0x10
+BG_GREEN    equ 0x20
+BG_CYAN     equ 0x30
+BG_RED      equ 0x40
+BG_MAGENTA  equ 0x50
+BG_BROWN    equ 0x60
+BG_LGRAY    equ 0x70
+BG_DGRAY    equ 0x80
+BG_LBLUE    equ 0x90
+BG_LGREEN   equ 0xA0
+BG_LCYAN    equ 0xB0
+BG_LRED     equ 0xC0
+BG_LMAGENTA equ 0xD0
+BG_YELLOW   equ 0xE0
+BG_WHITE    equ 0xF0
 
 ; Foreground colors
-FG_BLACK	equ 0x00
-FG_BLUE		equ 0x01
-FG_GREEN	equ 0x02
-FG_CYAN		equ 0x03
-FG_RED		equ 0x04
-FG_MAGENTA	equ 0x05
-FG_BROWN	equ 0x06
-FG_LGRAY	equ 0x07
-FG_DGRAY	equ 0x08
-FG_LBLUE	equ 0x09
-FG_LGREEN	equ 0x0A
-FG_LCYAN	equ 0x0B
-FG_LRED		equ 0x0C
-FG_LMAGENTA	equ 0x0D
-FG_YELLOW	equ 0x0E
-FG_WHITE	equ 0x0F
+FG_BLACK    equ 0x00
+FG_BLUE     equ 0x01
+FG_GREEN    equ 0x02
+FG_CYAN     equ 0x03
+FG_RED      equ 0x04
+FG_MAGENTA  equ 0x05
+FG_BROWN    equ 0x06
+FG_LGRAY    equ 0x07
+FG_DGRAY    equ 0x08
+FG_LBLUE    equ 0x09
+FG_LGREEN   equ 0x0A
+FG_LCYAN    equ 0x0B
+FG_LRED     equ 0x0C
+FG_LMAGENTA equ 0x0D
+FG_YELLOW   equ 0x0E
+FG_WHITE    equ 0x0F
 
 ; Setting VGA 80x25 text mode
 ; Spoils AX
@@ -78,7 +78,6 @@ tgbl_getVRAMAddr:
 ; Args: upper corner row, column, height, char, color
 ; Spoils AX, DI
 %macro tgblm_drawVerticalLine 5
-%%tgblm_drawVerticalLine:
 	mov al, %4
 	mov ah, %5
 	mov di, (%1) * vramWidth + (%2) * 2
@@ -93,7 +92,6 @@ tgbl_getVRAMAddr:
 ; Args: row, left corner column, width, char, color
 ; Spoils AX, DI
 %macro tgblm_drawHorizontalLine 5
-%%tgblm_drawHorizontalLine:
 	mov al, %4
 	mov ah, %5
 	mov di, (%1) * vramWidth + (%2) * 2
@@ -109,7 +107,6 @@ tgbl_getVRAMAddr:
 ;	upper right corner, lower left corner, lower right corner, color
 ; Spoils AX, DI
 %macro tgblm_drawCustomBorder 11
-%%tgblm_drawCustomBorder:
 	mov ah, (%11)
 	mov di, (%1) * vramWidth + (%2) * 2
 	; Draw upper left corner
