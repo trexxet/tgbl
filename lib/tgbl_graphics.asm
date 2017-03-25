@@ -74,6 +74,25 @@ tgbl_getVRAMAddr:
 	add di, cx
 	ret
 
+; Hide cursor
+; Spoils: AH, CH
+%macro tgblm_hideCursor 0
+	mov ah, 01h
+	mov ch, 0x20
+	int 10h
+%endmacro
+
+; Clear screen
+; Spoils: AX, DI
+%macro tgblm_clearScreen 0
+	xor ax, ax
+	xor di, di
+	%%clrloop:
+		stosw
+		cmp di, vramWidth * scrHeight
+		jne %%clrloop
+%endmacro
+
 ; Draw vertical line
 ; Args: upper corner row, column, height, char, color
 ; Spoils AX, DI

@@ -38,7 +38,7 @@ main:
 
 	.mainLoop:
 		call tgbl_keyboardHandler
-		tgblm_sleep 5
+		tgblm_sleep 10
 		jmp .mainLoop
 	hlt
 
@@ -56,12 +56,12 @@ ESC_key_handler:
 
 Q_key_handler:
 	mov byte [sampleText2 + 6], 'W'
-	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2len / 2
+	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2_len / 2
 	ret
 
 W_key_handler:
 	mov byte [sampleText2 + 6], 'Q'
-	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2len / 2
+	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2_len / 2
 	ret
 
 A_key_handler:
@@ -92,21 +92,18 @@ drawLines:
 	ret
 
 drawText:
-	tgblm_printString sampleText1, FG_LGRAY, scrHMid - 1, scrWMid -  sampleText1len / 2
-	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2len / 2
-	tgblm_printString sampleText3, FG_LGRAY, scrHMid + 2, scrWMid -  sampleText3len / 2
+	tgblm_printString sampleText1, FG_LGRAY, scrHMid - 1, scrWMid -  sampleText1_len / 2
+	tgblm_printString sampleText2, FG_LGRAY, scrHMid, scrWMid - sampleText2_len / 2
+	tgblm_printString sampleText3, FG_LGRAY, scrHMid + 2, scrWMid -  sampleText3_len / 2
 	ret
 
 fill 1, main
 
 ; SECTOR 5 - Constants
 sector5:
-sampleText1 db "Press ESC to shutdown", 0
-sampleText1len equ $ - sampleText1
-sampleText2 db "Press Q to change this text", 0
-sampleText2len equ $ - sampleText2
-sampleText3 db "Press A or S to change the number above", 0
-sampleText3len equ $ - sampleText3
+tgblm_addConstString sampleText1, "Press ESC to shutdown"
+tgblm_addConstString sampleText2, "Press Q to change this text"
+tgblm_addConstString sampleText3, "Press A or S to change the number above"
 
 fill 1, sector5
 

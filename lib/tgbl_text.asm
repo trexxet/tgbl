@@ -1,11 +1,11 @@
 ; TGBL text functions and macros
 
-; Hide cursor
-; Spoils: AH, CH
-%macro tgblm_hideCursor 0
-	mov ah, 01h
-	mov ch, 0x20
-	int 10h
+; Add constant string
+; Args: name, string (w/o 0-terminator)
+; Creates a name_len constant containig the length of string
+%macro tgblm_addConstString 2
+	%1 db %2, 0
+	%1_len equ $ - %1
 %endmacro
 
 ; Print string
@@ -39,7 +39,7 @@ tgbl_printString:
 
 ; Clear string on screen
 ; Args: row, column, width
-; Spois: AX, DI
+; Spoils: AX, DI
 %macro tgblm_clearString 3
 	xor ax, ax
 	mov di, ((%1) * vramWidth) + ((%2) * 2)
