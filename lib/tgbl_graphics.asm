@@ -57,6 +57,7 @@ tgbl_initVGA:
 ; Args: row, column
 ; Returns DI = BH * 160 + BL * 2
 ; Spoils CX
+; TODO: Is this function neccessary? Check if it can be removed
 %macro tgblm_getVRAMAddr 2
 	mov bh, %1
 	mov bl, %2

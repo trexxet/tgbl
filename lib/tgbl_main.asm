@@ -32,12 +32,8 @@
 	%ifdef INCLUDE_TIME
 		%include "lib/tgbl_time.asm"
 	%endif
-	tgblm_endSector 1, sector2
-
-	; SECTOR 3 - KEYBOARD ROUTINES
 	%ifdef INCLUDE_KEYBOARD
-	sector3:
 		%include "lib/tgbl_keyboard.asm"
-	tgblm_endSector 1, sector3
 	%endif
+	tgblm_endSector 1, sector2
 %endmacro

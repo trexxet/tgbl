@@ -31,8 +31,8 @@ tgbl_keyboardHandler:
 	.noKey:
 	ret
 
-; Keystroke handlers table
-tgbl_kbd_table: times 0x86 dw 0
+; Keystroke handlers table pointer
+tgbl_kbd_table equ 0x6b54	; 0x7c00 - 4096 bytes stack - 2 * 0x86
 
 ; Keyboard scan codes
 KEY_A           equ 0x1E

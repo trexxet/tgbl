@@ -4,14 +4,14 @@
 %macro tgblm_boot 1
 boot:
 	cli
-	; Overlap CS and DS to save space
+	; Overlap CS and DS
 	mov ax, cs
 	mov ds, ax
 	mov es, ax
-	; Setup 4K stack
-	xor ax, ax
+	; Setup 4K stack before this bootloader
+	mov ax, 0x07c0
 	mov ss, ax
-	mov sp, 0x7c00
+	mov sp, 4096
 	; Save disk number (DL) in stack
 	xor dh, dh
 	push dx

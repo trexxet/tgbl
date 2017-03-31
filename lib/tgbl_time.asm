@@ -14,12 +14,13 @@ tgbl_shutdown:
 	mov ax, 0x5301
 	xor bx, bx
 	int 15h
-	mov ax, 0x530E
-	xor bx, bx
-	mov cx, 0x0102
-	int 15h
 	mov ax, 0x5307
 	mov bx, 0x0001
 	mov cx, 0x0003
 	int 15h
+	ret
+
+; Soft reboot
+tgbl_softReboot:
+	jmp 0FFFFh:0
 	ret
