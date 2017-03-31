@@ -1,8 +1,11 @@
+; Set the number of sectors used by program excluding boot sector and sector with TGBL
 %define NUM_OF_USER_SECTORS 1
+; Set included modules
 %define INCLUDE_GRAPHICS
 %define INCLUDE_TEXT
 %define INCLUDE_KEYBOARD
 %define INCLUDE_TIME
+; Include TGBL and launch program
 %include "lib/tgbl_main.asm"
 tgblm_start main
 
