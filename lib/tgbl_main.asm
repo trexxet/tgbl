@@ -23,6 +23,9 @@
 	; SECTOR 2 - GRAPHICAL, TEXT & TIME FUNCTIONS
 	sector2:
 	jmp %1
+	%ifdef INCLUDE_COMMON
+		%include "lib/tgbl_common.asm"
+	%endif
 	%ifdef INCLUDE_GRAPHICS
 		%include "lib/tgbl_graphics.asm"
 	%endif

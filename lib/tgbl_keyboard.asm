@@ -32,7 +32,7 @@ tgbl_keyboardHandler:
 	ret
 
 ; Keystroke handlers table pointer
-tgbl_kbd_table equ 0x6b54	; 0x7c00 - 4096 bytes stack - 2 * 0x86
+tgbl_kbd_table equ 0x6b52	; 0x7c00 - 4096 bytes stack - 2 * 0x87
 
 ; Keyboard scan codes
 KEY_A           equ 0x1E
