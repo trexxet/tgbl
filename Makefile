@@ -1,15 +1,4 @@
-ASM = nasm -f bin
+# Just a link to example/Makefile
 
-%.bin : %.asm
-	$(ASM) $< -o $@
-
-all: main.bin
-
-run: all
-	qemu-system-i386 -m 32 -drive format=raw,file=main.bin
-
-debug-bochs: all
-	bochs -qf bochsrc-debug
-
-clean:
-	rm -f ./*.bin
+all run debug-bochs clean:
+	$(MAKE) -C example $@

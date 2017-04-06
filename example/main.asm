@@ -7,7 +7,7 @@
 %define INCLUDE_KEYBOARD
 %define INCLUDE_TIME
 ; Include TGBL and launch program
-%include "lib/tgbl_main.asm"
+%include "tgbl_main.asm"
 tgblm_start main
 
 ; Your program starts here
@@ -24,12 +24,13 @@ main:
 
 	.mainLoop:
 		call tgbl_keyboardHandler ; Check keyboard state
-		tgblm_timer incSampleNum, 18, timerTicks ; Timer iteration
+		tgblm_timer incSampleNum, t_second * 1, timerTicks ; Timer iteration
 		tgblm_sleep 10 ; Sleep a bit before next main loop iteration
 		jmp .mainLoop
 	hlt
 
 initKeys:
+	call tgbl_clearKeyHandlersTable
 	; Link handlers to keystrokes
 	tgblm_initKey KEY_ESC, ESC_key_handler
 	tgblm_initKey KEY_Q, Q_key_handler

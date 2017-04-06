@@ -1,5 +1,10 @@
 ; TGBL time functions and macros
 
+; Time periods in sysclock ticks
+t_second   equ 18
+t_minute   equ 1092
+t_hour     equ 65543
+
 ; Sleep
 ; Args: milliseconds to sleep
 ; Spoils: AX, CX, DX

@@ -17,26 +17,26 @@
 	section .text
 
 	; SECTOR 1 - BOOTSECTOR
-	%include "lib/tgbl_boot.asm"
+	%include "tgbl_boot.asm"
 	tgblm_boot NUM_OF_USER_SECTORS + 3
 
 	; SECTOR 2 - GRAPHICAL, TEXT & TIME FUNCTIONS
 	sector2:
 	jmp %1
 	%ifdef INCLUDE_COMMON
-		%include "lib/tgbl_common.asm"
+		%include "tgbl_common.asm"
 	%endif
 	%ifdef INCLUDE_GRAPHICS
-		%include "lib/tgbl_graphics.asm"
+		%include "tgbl_graphics.asm"
 	%endif
 	%ifdef INCLUDE_TEXT
-		%include "lib/tgbl_text.asm"
+		%include "tgbl_text.asm"
 	%endif
 	%ifdef INCLUDE_TIME
-		%include "lib/tgbl_time.asm"
+		%include "tgbl_time.asm"
 	%endif
 	%ifdef INCLUDE_KEYBOARD
-		%include "lib/tgbl_keyboard.asm"
+		%include "tgbl_keyboard.asm"
 	%endif
 	tgblm_endSector 1, sector2
 %endmacro

@@ -1,5 +1,20 @@
 ; TGBL keyboard routines
 
+; Keystroke handlers table pointer
+tgbl_kbd_table equ 0x6b52	; 0x7c00 - 4096 bytes stack - 2 * 0x87
+
+; Clean keyboard handlers table
+; Spoils: AX, BX
+tgbl_clearKeyHandlersTable:
+	xor ax, ax
+	xor bx, bx
+	.clearLoop:
+		mov [tgbl_kbd_table + bx], ax
+		add bx, 2
+		cmp bx, 0x87 * 2
+		jb .clearLoop
+	ret
+
 ; Set keystroke handler
 ; Args: key, handler
 %macro tgblm_initKey 2
@@ -8,8 +23,6 @@
 
 ; Keyboard handler
 ; Spoils: AH, BX
-; Uncomment the lines with needed keys,
-; then write a %KEY%_key_handler function for each of them
 tgbl_keyboardHandler:
 	; Get key
 	mov ah, 01h
@@ -30,9 +43,6 @@ tgbl_keyboardHandler:
 	int 16h
 	.noKey:
 	ret
-
-; Keystroke handlers table pointer
-tgbl_kbd_table equ 0x6b52	; 0x7c00 - 4096 bytes stack - 2 * 0x87
 
 ; Keyboard scan codes
 KEY_A           equ 0x1E
