@@ -5,6 +5,7 @@
 ASCII picture editor which can save pictures in format compatible with TGBL
 
 ## How to use it?
+Note that your terminal/font may not support Unicode. Also your BIOS may have different implementation of extended ASCII table.
 *to be continued*
 
 ## Building and running

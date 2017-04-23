@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include <ctype.h>
 #include <unistd.h>
+#include <wchar.h>
+#include <locale.h>
 #include <ncurses.h>
 
 #include "colors.h"
+#include "unicode.h"
 
 uint8_t parseKey(int key);
 void redraw();
@@ -15,12 +17,14 @@ void error(char *msg);
 void final();
 
 struct { uint8_t Y, X; } size, pos;
-uint8_t chr, fg, bg;
+uint8_t fg, bg;
+wchar_t chr;
 uint8_t data[80][50] = {0};
 
 void init()
 {
 	// Init ncurses
+	setlocale(LC_ALL, "");
 	initscr();
 	start_color();
 	cbreak();
@@ -82,10 +86,10 @@ uint8_t parseKey(int key)
 			pos.X > 1 ? pos.X-- : (pos.X = size.X);
 			break;
 		case 'w': // Increase char
-			chr++;
+			chr < 255 ? chr++ : (chr = 1);
 			break;
 		case 'q': // Decrease char
-			chr--;
+			chr > 1 ? chr-- : (chr = 255);
 			break;
 		case ' ': // Place char
 			data[pos.Y - 1][(pos.X-1)*2] = chr;
@@ -105,12 +109,11 @@ uint8_t parseKey(int key)
 			break;
 		case 'o': // Save
 			return 2;
-			break;
 		case 'u': // Quit
 			return 0;
-			break;
+		default:
+			return 1;
 	}
-	return 1;
 }
 
 void redraw()
@@ -118,23 +121,35 @@ void redraw()
 	erase();
 	// Draw header
 	mvprintw(0, 0, "Y: %d X: %d Char: %d", pos.Y, pos.X, chr);
-	if (isprint(chr) && (chr < 128))
-		printw(" (%c)", chr);
+	if (chr > 31)
+	{
+		if (chr < 128)
+			printw(" (%c)", chr);
+		else
+			printw(" (%lc)", unicode[chr - 128]);
+	}
 	SET_PAIR(fg, bg);
 	printw(" COLOR ");
 	RESET_PAIR;
 
 	// Draw picture
 	int i = 0;
-	for (i; i < size.Y; i++)
+	for (; i < size.Y; i++)
 		for (int j = 0; j < size.X; j++)
 		{
 			if ((i == pos.Y - 1) && (j == pos.X - 1))
+			{  // Draw cursor
+				attron(A_BLINK | A_BOLD);
 				mvaddch(i + 2, j + 1, 'X');
+				attroff(A_BLINK | A_BOLD);
+			}
 			else
-			{
+			{  // Draw symbol
 				SET_PAIR(data[i][j*2 + 1] >> 4, data[i][j*2 + 1] & 0xF);
-				mvaddch(i + 2, j + 1, data[i][j*2]);
+				if (data[i][j*2] < 128)
+					mvaddch(i + 2, j + 1, data[i][j*2]);
+				else
+					mvprintw(i + 2, j + 1, "%lc", unicode[data[i][j*2] - 128]);
 				RESET_PAIR;
 			}
 		}
@@ -172,6 +187,8 @@ void loadFile(char *name)
 
 void saveFile(char *name)
 {
+	if (access(name, W_OK) == -1)
+		error("Can't open file for writing");
 	FILE *file = fopen(name, "wb");
 	fwrite(&size, sizeof(size), 1, file);
 	for (int i = 0; i < size.Y; i++)
@@ -183,7 +200,8 @@ void saveFile(char *name)
 
 void error(char *msg)
 {
-	printw(msg);
+	erase();
+	mvprintw(0, 0, msg);
 	refresh();
 	getch();
 	final();
