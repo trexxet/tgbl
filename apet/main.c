@@ -19,7 +19,7 @@ void final();
 struct { uint8_t Y, X; } size, pos;
 uint8_t fg, bg;
 wchar_t chr;
-uint8_t data[80][50] = {0};
+uint8_t data[25][160] = {0};
 
 void init()
 {
@@ -55,9 +55,13 @@ void main(int argc, char **argv)
 		error("Please specify the file, e.g. ./apet file.bin\n");
 	if (access(argv[1], R_OK) != -1)
 		loadFile(argv[1]);
+	else
+	{
+		size.Y = 25;
+		size.X = 80;
+	}
 
 	int running = 1;
-	size.X = size.Y = 20;
 	while (running)
 	{
 		redraw();
@@ -107,9 +111,21 @@ uint8_t parseKey(int key)
 		case 'x': // Increase foreground color
 			fg < COLOR_NUM - 1 ? fg++ : (fg = 0);
 			break;
+		case 'u': // Decrease height
+			if (size.Y > 1) size.Y--;
+			break;
+		case 'm': // Increase height
+			if (size.Y < 25) size.Y++;
+			break;
+		case 'h': // Decrease width
+			if (size.X > 1) size.X--;
+			break;
+		case 'k': // Increase width
+			if (size.X < 80) size.X++;
+			break;
 		case 'o': // Save
 			return 2;
-		case 'u': // Quit
+		case 't': // Quit
 			return 0;
 		default:
 			return 1;
@@ -120,17 +136,18 @@ void redraw()
 {
 	erase();
 	// Draw header
-	mvprintw(0, 0, "Y: %d X: %d Char: %d", pos.Y, pos.X, chr);
+	mvprintw(0, 0, "Y: %d X: %d Char: %d ", pos.Y, pos.X, chr);
 	if (chr > 31)
 	{
 		if (chr < 128)
-			printw(" (%c)", chr);
+			printw("(%c) ", chr);
 		else
-			printw(" (%lc)", unicode[chr - 128]);
+			printw("(%lc) ", unicode[chr - 128]);
 	}
 	SET_PAIR(fg, bg);
 	printw(" COLOR ");
 	RESET_PAIR;
+	printw(" Height: %d Width: %d", size.Y, size.X);
 
 	// Draw picture
 	int i = 0;
@@ -145,7 +162,7 @@ void redraw()
 			}
 			else
 			{  // Draw symbol
-				SET_PAIR(data[i][j*2 + 1] >> 4, data[i][j*2 + 1] & 0xF);
+				SET_PAIR(data[i][j*2 + 1] & 0xF, data[i][j*2 + 1] >> 4);
 				if (data[i][j*2] < 128)
 					mvaddch(i + 2, j + 1, data[i][j*2]);
 				else
@@ -158,7 +175,8 @@ void redraw()
 	rectangle(1, 0, size.Y + 2, size.X + 1);
 	mvprintw(i + 3, 0, "Arrows to move; Q/W to change char; Space to place char\n");
 	printw("A/S to change background; Z/X to change foreground\n");
-	printw("O to save; U to quit");
+	printw("U/M to change height; H/K to change width\n");
+	printw("O to save; T to quit");
 	refresh();
 }
 
@@ -187,8 +205,6 @@ void loadFile(char *name)
 
 void saveFile(char *name)
 {
-	if (access(name, W_OK) == -1)
-		error("Can't open file for writing");
 	FILE *file = fopen(name, "wb");
 	fwrite(&size, sizeof(size), 1, file);
 	for (int i = 0; i < size.Y; i++)

@@ -10,8 +10,8 @@ Note that your terminal/font may not support Unicode. Also your BIOS may have di
 
 ## Building and running
 * `$ make` to get an executable
-* `$ make run` to build and launch
+* `$ ./apet *file*` to launch
 
 ## Requirements
 * gcc
-* ncurses development libraries
+* ncursesw development library
