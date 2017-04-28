@@ -2,7 +2,8 @@
 %define INCLUDE_COMMON
 %define INCLUDE_KEYBOARD
 %define INCLUDE_TIME
-%define INCLUDE_PICTURES
+; Include pictures module
+%define INCLUDE_PICTURE
 %include "tgbl_main.asm"
 tgblm_start main
 
@@ -26,3 +27,8 @@ ESC_key_handler:
 	call tgbl_shutdown
 
 tgblm_endSector 1, main
+
+; Constants
+constSector:
+
+tgblm_endSector 1, constSector

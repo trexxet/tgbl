@@ -49,7 +49,7 @@ void init()
 
 	// Init global variables
 	pos.Y = pos.X = 1;
-	chr = 1;
+	chr = 32;
 	fg = CL_BLACK;
 	bg = CL_LGRAY;
 }
@@ -97,14 +97,18 @@ uint8_t parseKey(int key)
 			pos.X > 1 ? pos.X-- : (pos.X = size.X);
 			break;
 		case 'w': // Increase char
-			chr < 255 ? chr++ : (chr = 1);
+			chr < 255 ? chr++ : (chr = 32);
 			break;
 		case 'q': // Decrease char
-			chr > 1 ? chr-- : (chr = 255);
+			chr > 32 ? chr-- : (chr = 255);
 			break;
 		case ' ': // Place char
 			data[pos.Y - 1][(pos.X-1)*2] = chr;
 			data[pos.Y - 1][(pos.X-1)*2 + 1] = fg | (bg << 4);
+			break;
+		case 'd': // Delete char
+			data[pos.Y - 1][(pos.X-1)*2] = 0;
+			data[pos.Y - 1][(pos.X-1)*2 + 1] = 0;
 			break;
 		case 'a': // Decrease background color
 			bg > 0 ? bg-- : (bg = BGCOLOR_NUM - 1);
@@ -144,13 +148,10 @@ void redraw()
 	erase();
 	// Draw header
 	mvprintw(0, 0, "Y: %d X: %d Char: %d ", pos.Y, pos.X, chr);
-	if (chr > 31)
-	{
-		if (chr < 128)
-			printw("(%c) ", chr);
-		else
-			printw("(%lc) ", unicode[chr - 128]);
-	}
+	if (chr < 128)
+		printw("(%c) ", chr);
+	else
+		printw("(%lc) ", unicode[chr - 128]);
 	SET_PAIR(fg, bg);
 	printw(" COLOR ");
 	RESET_PAIR;
@@ -180,7 +181,7 @@ void redraw()
 
 	// Draw footer & box
 	rectangle(1, 0, size.Y + 2, size.X + 1);
-	mvprintw(i + 3, 0, "Arrows to move; Q/W to change char; Space to place char\n");
+	mvprintw(i + 3, 0, "Arrows to move; Q/W to change char; Space to place char; D to delete char\n");
 	printw("A/S to change background; Z/X to change foreground\n");
 	printw("U/M to change height; H/K to change width\n");
 	printw("O to save; T to quit");
@@ -201,7 +202,7 @@ void rectangle(uint8_t y1, uint8_t x1, uint8_t y2, uint8_t x2)
 
 void rwFile(uint8_t write, char *name)
 {
-	FILE *file = fopen(name, (write ? "rw" : "rb"));
+	FILE *file = fopen(name, (write ? "wb" : "rb"));
 	if (write)
 		fwrite(&size, sizeof(size), 1, file);
 	else 

@@ -38,5 +38,8 @@
 	%ifdef INCLUDE_KEYBOARD
 		%include "tgbl_keyboard.asm"
 	%endif
+	%ifdef INCLUDE_PICTURE
+		%include "tgbl_picture.asm"
+	%endif
 	tgblm_endSector 1, sector2
 %endmacro

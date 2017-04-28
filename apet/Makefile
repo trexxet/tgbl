@@ -2,7 +2,7 @@ CC = gcc
 SRC = main.c
 TARGET = apet
 
-CFLAGS = -g -O0 --std=gnu11
+CFLAGS = --std=gnu11
 LDLIBS = -lncursesw
 
 all:
