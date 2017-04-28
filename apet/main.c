@@ -11,10 +11,11 @@
 uint8_t parseKey(int key);
 void redraw();
 void rectangle(uint8_t y1, uint8_t x1, uint8_t y2, uint8_t x2);
-void loadFile(char *name);
-void saveFile(char *name);
 void error(char *msg);
 void final();
+
+enum { F_READ, F_WRITE };
+void rwFile(uint8_t write, char *name);
 
 struct { uint8_t Y, X; } size, pos;
 uint8_t fg, bg;
@@ -30,6 +31,12 @@ void init()
 	cbreak();
 	noecho();
 	curs_set(0);
+
+	// Check window size
+	int height, width;
+	getmaxyx(stdscr, height, width);
+	if ( (height < 32) || (width < 82) )
+		error("Minimum terminal window size is 32x82");
 
 	// Check for color support
 	if ((COLORS < 256) || !has_colors())
@@ -54,7 +61,7 @@ void main(int argc, char **argv)
 	if (argc != 2)
 		error("Please specify the file, e.g. ./apet file.bin\n");
 	if (access(argv[1], R_OK) != -1)
-		loadFile(argv[1]);
+		rwFile(F_READ, argv[1]);
 	else
 	{
 		size.Y = 25;
@@ -67,7 +74,7 @@ void main(int argc, char **argv)
 		redraw();
 		running = parseKey(getch());
 		if (running == 2)
-			saveFile(argv[1]);
+			rwFile(F_WRITE, argv[1]);
 	}
 
 	final();
@@ -192,24 +199,19 @@ void rectangle(uint8_t y1, uint8_t x1, uint8_t y2, uint8_t x2)
 	mvaddch(y2, x2, ACS_LRCORNER);
 }
 
-void loadFile(char *name)
+void rwFile(uint8_t write, char *name)
 {
-	FILE *file = fopen(name, "rb");
-	fread(&size, sizeof(size), 1, file);
+	FILE *file = fopen(name, (write ? "rw" : "rb"));
+	if (write)
+		fwrite(&size, sizeof(size), 1, file);
+	else 
+		fread(&size, sizeof(size), 1, file);
 	for (int i = 0; i < size.Y; i++)
 		for (int j = 0; j < size.X; j++)
-			fread(data[i] + j*2, 2, 1, file);
-	fclose(file);
-	file = NULL;
-}
-
-void saveFile(char *name)
-{
-	FILE *file = fopen(name, "wb");
-	fwrite(&size, sizeof(size), 1, file);
-	for (int i = 0; i < size.Y; i++)
-		for (int j = 0; j < size.X; j++)
-			fwrite(data[i] + j*2, 2, 1, file);
+			if (write)
+				fwrite(data[i] + j*2, 2, 1, file);
+			else
+				fread(data[i] + j*2, 2, 1, file);
 	fclose(file);
 	file = NULL;
 }
