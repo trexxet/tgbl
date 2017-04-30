@@ -138,9 +138,8 @@ uint8_t parseKey(int key)
 			return 2;
 		case 't': // Quit
 			return 0;
-		default:
-			return 1;
 	}
+	return 1;
 }
 
 void redraw()
