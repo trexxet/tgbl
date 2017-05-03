@@ -13,7 +13,7 @@ Cd into the 'example', then:
 * `$ make run` to build and launch QEMU
 
 #### Running from emulator
-TGBL was tested on QEMU and Bochs. Implementation on Bochs is extremely slow and using QEMU is recommended. However, you may use Bochs for debug.
+TGBL was tested on QEMU.
 
 ## Requirements
 * nasm

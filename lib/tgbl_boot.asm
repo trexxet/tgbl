@@ -12,15 +12,16 @@ boot:
 	mov ax, 0x07c0
 	mov ss, ax
 	mov sp, 4096
-	; Save disk number (DL) in stack
-	xor dh, dh
-	push dx
 	; Load next sectors
-	mov ah, 0x02
-	mov al, %1
-	mov cx, 0x0002
-	pop dx
-	mov bx, bootend
+	mov si, 0x7a00
+	mov byte [si + 0], 10h
+	mov byte [si + 1], 0
+	mov byte [si + 2], %1
+	mov byte [si + 3], 0
+	mov dword [si + 4], bootend
+	mov dword [si + 8], 1
+	mov dword [si + 12], 0
+	mov ah, 42h
 	int 13h
 	; Start
 	jmp bootend
