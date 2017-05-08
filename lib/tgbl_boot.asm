@@ -2,8 +2,9 @@
 
 ; Args: number of sectors to load
 %macro tgblm_boot 1
-BPB:
 	jmp boot
+
+BPB:
     times 3 - ($ - BPB) db 0x90   ; Support 2 or 3 byte encoded JMPs before BPB.
 
     ; Dos 3.4 EBPB 1.44MB floppy
@@ -33,10 +34,9 @@ boot:
 	xor ax, ax
 	mov ds, ax
 	mov es, ax
-	; Setup 4K stack before this bootloader
-	mov ax, 0x07c0
+	; Setup stack before this bootloader
 	mov ss, ax
-	mov sp, 4096
+	mov sp, 0x7c00
 	; Load next sectors
 	mov si, DAP
 	mov ah, 42h
@@ -52,7 +52,7 @@ DAP:
 	dq 1
 
 ; Fill the rest of bootsector with zeroes and end it
-times 510 - ($ - BPB) db 0
+times 510 - ($ - $$) db 0
 dw 0xAA55
 bootend:
 %endmacro
