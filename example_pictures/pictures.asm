@@ -13,7 +13,7 @@ main:
 	tgblm_hideCursor
 	call initKeys
 
-	 call drawText
+	call drawText
 
 	.mainLoop:
 		call tgbl_keyboardHandler

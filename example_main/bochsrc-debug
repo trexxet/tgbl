@@ -1,0 +1,11 @@
+megs: 32
+romimage: file=/usr/share/bochs/BIOS-bochs-latest, address=0xfffe0000
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+boot: c
+ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
+ata0-master: type=disk, path="main.img", mode=flat, cylinders=0, heads=0, spt=0, model="Generic 1234", biosdetect=auto, translation=auto
+panic: action=ask
+log: bochsout.txt
+mouse: enabled=0
+keyboard: type=mf, serial_delay=200, paste_delay=100000
+display_library: x, options="gui_debug"

@@ -8,9 +8,10 @@ A set of functions & macros helping you write less and write fast.
 Copy the `lib/` folder to your project's one and don't forget to set the `-i "lib/"` flag for NASM. Then take a look at the examples.
 
 ## Building sample program and running
-Cd into the 'example', then:
-* `$ make` to get a main.bin
+Cd into any example, then:
+* `$ make` to get a binary
 * `$ make run` to build and launch QEMU
+* `# dd if=%binary name% of=%device name% bs=512` to write a binary to device
 
 #### Running from emulator
 TGBL was tested on QEMU.

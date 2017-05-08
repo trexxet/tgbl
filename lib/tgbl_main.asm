@@ -18,7 +18,7 @@
 
 	; SECTOR 1 - BOOTSECTOR
 	%include "tgbl_boot.asm"
-	tgblm_boot NUM_OF_USER_SECTORS + 3
+	tgblm_boot NUM_OF_USER_SECTORS + 2
 
 	; SECTOR 2 - GRAPHICAL, TEXT & TIME FUNCTIONS
 	sector2:
