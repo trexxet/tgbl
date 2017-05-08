@@ -16,14 +16,8 @@ BG_RED      equ 0x40
 BG_MAGENTA  equ 0x50
 BG_BROWN    equ 0x60
 BG_LGRAY    equ 0x70
-BG_DGRAY    equ 0x80
-BG_LBLUE    equ 0x90
-BG_LGREEN   equ 0xA0
-BG_LCYAN    equ 0xB0
-BG_LRED     equ 0xC0
-BG_LMAGENTA equ 0xD0
-BG_YELLOW   equ 0xE0
-BG_WHITE    equ 0xF0
+
+BG_BLINK    equ 0x80
 
 ; Foreground colors
 FG_BLACK    equ 0x00

@@ -1,5 +1,5 @@
 ; Set the number of sectors used by program excluding boot sector and sector with TGBL
-%define NUM_OF_USER_SECTORS 1
+%define NUM_OF_USER_SECTORS 2
 ; Set included modules
 %define INCLUDE_COMMON
 %define INCLUDE_GRAPHICS
@@ -74,11 +74,11 @@ redrawNum:
 	ret
 
 drawLines:
-	tgblm_drawDoubleBorder 1, 1, scrHeight - 2, scrWidth - 2, BG_DGRAY | FG_LGRAY
-	tgblm_printChar 244, BG_GREEN | FG_RED, scrHMid, 3
-	tgblm_printChar 245, BG_RED | FG_GREEN, scrHMid + 1, 3
-	tgblm_drawVerticalLine 1, 5, scrHeight - 2, '#', BG_DGRAY | FG_RED
-	tgblm_drawHorizontalLine scrHeight - 5, 5, scrWidth - 6, '#', BG_DGRAY | FG_GREEN
+	tgblm_drawDoubleBorder 1, 1, scrHeight - 2, scrWidth - 2, BG_LGRAY | FG_BLACK
+	tgblm_printChar 244, BG_GREEN | FG_RED | BG_BLINK, scrHMid, 3
+	tgblm_printChar 245, BG_RED | FG_GREEN | BG_BLINK, scrHMid + 1, 3
+	tgblm_drawVerticalLine 1, 5, scrHeight - 2, '#', BG_LGRAY | FG_RED
+	tgblm_drawHorizontalLine scrHeight - 5, 5, scrWidth - 6, '#', BG_LGRAY | FG_GREEN
 	ret
 
 drawText:

@@ -2,9 +2,9 @@
 
 ; Args: number of sectors to load
 %macro tgblm_boot 1
-	jmp boot
 
 BPB:
+	jmp boot
     times 3 - ($ - BPB) db 0x90   ; Support 2 or 3 byte encoded JMPs before BPB.
 
     ; Dos 3.4 EBPB 1.44MB floppy
@@ -52,7 +52,7 @@ DAP:
 	dq 1
 
 ; Fill the rest of bootsector with zeroes and end it
-times 510 - ($ - $$) db 0
+times 510 - ($ - BPB) db 0
 dw 0xAA55
 bootend:
 %endmacro
