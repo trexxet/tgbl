@@ -15,4 +15,4 @@ debug-bochs: all
 	bochs -qf bochsrc-debug
 
 clean:
-	rm -f ./pictures.bin *.img
+	rm -f *.bin *.img
