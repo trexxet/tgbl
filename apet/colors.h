@@ -26,6 +26,5 @@ enum {
 	CL_WHITE
 };
 
-// Terminal color codes matched to BIOS color codes
-const static uint8_t color[16] = {0, 4, 2, 6, 1, 5, 94, 7, 8, 12, 10, 6, 9, 13, 11, 15};
-
+// xterm color codes matched to BIOS color codes
+const static uint8_t color[16] = {0, 19, 34, 37, 124, 127, 130, 248, 240, 63, 83, 87, 203, 207, 227, 15};
