@@ -8,7 +8,7 @@
 %endmacro
 
 ; Draw picture
-; Args: name, upper corner row, left corner column
+; Args: name, upper row, left column
 ; Spoils: AX, CX, DX, SI, DI
 %macro tgblm_drawPicture 3
 	mov si, %1

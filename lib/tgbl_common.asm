@@ -58,6 +58,34 @@ tgbl_initVGA:
 		jne %%clrloop
 %endmacro
 
+; Clear screen area
+; Args: upper row, left column, height, width
+; Spoils: AX, CX, DX, DI
+%macro tgblm_clearScreenArea 4
+	mov di, ((%1) * vramWidth) + ((%2) * 2)
+	mov dh, %3
+	mov dl, %4
+	call tgbl_clearScreenArea
+%endmacro
+tgbl_clearScreenArea:
+	xor cx, cx ; CX - counter (CH - column, CL - row)
+	.clrLoop:
+		xor ax, ax
+		stosw
+		inc ch
+		cmp ch, dh
+		jb .clrLoop
+		; Next line:
+		add di, vramWidth
+		movzx ax, dh ;
+		shl ax, 1    ; DI -= DH * 2
+		sub di, ax   ;
+		xor ch, ch
+		inc cl
+		cmp cl, dl
+		jb .clrLoop
+	ret
+
 ; Hide cursor
 ; Spoils: AH, CH
 %macro tgblm_hideCursor 0
