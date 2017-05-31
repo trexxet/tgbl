@@ -47,44 +47,64 @@ tgbl_initVGA:
 	mov es, ax
 	ret
 
+; Fill screen with symbol
+; Args: symbol, color
+; Spoils: AX, DI
+%macro tgblm_fillScreen 2
+	mov al, %1
+	mov ah, %2
+	xor di, di
+	%%fillLoop:
+		stosw
+		cmp di, vramWidth * scrHeight
+		jne %%fillLoop
+%endmacro
+
 ; Clear screen
 ; Spoils: AX, DI
 %macro tgblm_clearScreen 0
-	xor ax, ax
-	xor di, di
-	%%clrloop:
-		stosw
-		cmp di, vramWidth * scrHeight
-		jne %%clrloop
+	tgblm_fillScreen 0, 0
 %endmacro
+
+; Fill screen area
+; Args: char, color, upper row, left column, height, width
+; Spoils: AX, CX, DX, DI
+%macro tgblm_fillScreenArea 6
+	mov al, %1
+	mov ah, %2
+	mov di, ((%3) * vramWidth) + ((%4) * 2)
+	mov dh, %5
+	mov dl, %6
+	call tgbl_fillScreenArea
+%endmacro
+tgbl_fillScreenArea:
+	push ax
+	xor cx, cx ; CX - counter (CH - column, CL - row)
+	.fillLoop:
+		pop ax
+		stosw
+		push ax
+		inc cl
+		cmp cl, dl
+		jb .fillLoop
+		; Next line:
+		add di, vramWidth
+		movzx ax, dl ;
+		shl ax, 1    ; DI -= DH * 2
+		sub di, ax   ;
+		xor cl, cl
+		inc ch
+		cmp ch, dh
+		jb .fillLoop
+	pop ax
+	ret
 
 ; Clear screen area
 ; Args: upper row, left column, height, width
 ; Spoils: AX, CX, DX, DI
 %macro tgblm_clearScreenArea 4
-	mov di, ((%1) * vramWidth) + ((%2) * 2)
-	mov dh, %3
-	mov dl, %4
-	call tgbl_clearScreenArea
+	tgblm_fillScreenArea 0, 0, (%1), (%2), (%3), (%4)
 %endmacro
-tgbl_clearScreenArea:
-	xor cx, cx ; CX - counter (CH - column, CL - row)
-	.clrLoop:
-		xor ax, ax
-		stosw
-		inc ch
-		cmp ch, dh
-		jb .clrLoop
-		; Next line:
-		add di, vramWidth
-		movzx ax, dh ;
-		shl ax, 1    ; DI -= DH * 2
-		sub di, ax   ;
-		xor ch, ch
-		inc cl
-		cmp cl, dl
-		jb .clrLoop
-	ret
 
 ; Hide cursor
 ; Spoils: AH, CH
