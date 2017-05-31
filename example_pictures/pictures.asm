@@ -32,7 +32,6 @@ ESC_key_handler:
 	call tgbl_shutdown
 
 M_key_handler:
-	tgblm_clearScreen
 	tgblm_drawPicture MonaLisa, 0, 0
 	ret
 

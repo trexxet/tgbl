@@ -21,6 +21,12 @@ tgbl_clearKeyHandlersTable:
 	mov word [tgbl_kbd_table + (%1) * 2], (%2)
 %endmacro
 
+; Clear keystroke handler
+; Args: key
+%macro tgblm_deinitKey 1
+	mov word [tgbl_kbd_table + (%1) * 2], 0
+%endmacro
+
 ; Keyboard handler
 ; Spoils: AH, BX
 tgbl_keyboardHandler:
