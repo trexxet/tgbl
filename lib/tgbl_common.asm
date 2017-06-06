@@ -47,8 +47,8 @@ tgbl_initVGA:
 	mov es, ax
 	ret
 
-; Fill screen with symbol
-; Args: symbol, color
+; Fill screen with char
+; Args: char, color
 ; Spoils: AX, DI
 %macro tgblm_fillScreen 2
 	mov al, %1
@@ -66,7 +66,7 @@ tgbl_initVGA:
 	tgblm_fillScreen 0, 0
 %endmacro
 
-; Fill screen area
+; Fill screen area with char
 ; Args: char, color, upper row, left column, height, width
 ; Spoils: AX, CX, DX, DI
 %macro tgblm_fillScreenArea 6
