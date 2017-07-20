@@ -1,14 +1,14 @@
 ; TGBL pictures routines
 
 ; Add picture
-; Args: name, file (in quotes)
+; Args: picture name, picture file (in quotes)
 %macro tgblm_addPicture 2
 	%1:
 		incbin %2
 %endmacro
 
 ; Draw picture
-; Args: name, upper row, left column
+; Args: picture name, upper row, left column
 ; Spoils: AX, CX, DX, SI, DI
 %macro tgblm_drawPicture 3
 	mov si, %1

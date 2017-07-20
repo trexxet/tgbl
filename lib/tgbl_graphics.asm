@@ -48,10 +48,10 @@ tgbl_getVRAMAddr:
 		jb %%line
 %endmacro
 
-; Draw custom border
+; Draw custom char border
 ; Args: upper corner row, left corner column, height, width,
-;	horizontal line char, vertical line char, upper left corner,
-;	upper right corner, lower left corner, lower right corner, color
+;	horizontal line char, vertical line char, upper left corner char,
+;	upper right corner char, lower left corner char, lower right corner char, color
 ; Spoils AX, DI
 %macro tgblm_drawCustomBorder 11
 	mov ah, (%11)
@@ -100,14 +100,14 @@ tgbl_getVRAMAddr:
 	tgblm_drawCustomBorder (%1), (%2), (%3), (%4), (%5), (%5), (%5), (%5), (%5), (%5), (%6)
 %endmacro
 
-; Draw single border
+; Draw single-line border
 ; Args: upper corner row, left corner column, height, width, color
 ; Spoils AX, DI
 %macro tgblm_drawSingleBorder 5
 	tgblm_drawCustomBorder (%1), (%2), (%3), (%4), 196, 179, 218, 191, 192, 217, (%5)
 %endmacro
 
-; Draw double border
+; Draw double-line border
 ; Args: upper corner row, left corner column, height, width, color
 ; Spoils AX, DI
 %macro tgblm_drawDoubleBorder 5

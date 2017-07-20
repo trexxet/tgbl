@@ -29,15 +29,15 @@ tgbl_getSysTime:
 	ret
 
 ; Save system time (without hours) in word variable
-; Args: variable to store ticks count (2 bytes)
+; Args: address where to store ticks count (2 bytes)
 ; Spoils: AH, CX, DX
 %macro tgblm_saveSysTimeMS 1
 	tgblm_getSysTime
 	mov [%1], dx
 %endmacro
 
-; Save system time (with hours) in double word variable
-; Args: variable to store ticks count (4 bytes)
+; Save system time (with hours) in dword variable
+; Args: address where to store ticks count (4 bytes)
 ; Spoils: AH, CX, DX
 %macro tgblm_saveSysTimeHMS 1
 	tgblm_saveSysTimeMS %1
@@ -48,14 +48,14 @@ tgbl_getSysTime:
 ; Get number of ticks passed from last system time save
 ; Spoils: AH, CX, DX
 ; WITHOUT HOURS:
-; Args: variable to store ticks count (2 bytes)
+; Args: address of ticks count stored (2 bytes)
 ; Returns: DX = number of clock ticks since last systime save
 %macro tgblm_getDeltaTimeMS 1
 	tgblm_getSysTime
 	sub dx, [%1]
 %endmacro
 ; WITH HOURS:
-; Args: variable to store ticks count (4 bytes)
+; Args: address of ticks count stored (4 bytes)
 ; Returns: CX:DX = number of clock ticks since last systime save
 %macro tgblm_getDeltaTimeHMS 1
 	tgblm_getDeltaTimeMS %1
@@ -64,7 +64,7 @@ tgbl_getSysTime:
 
 ; Simple timer implementation: call X every Y ticks (Y < 0xFFFF)
 ; Args: function to call, period (in ticks, ~18.2 ticks per second, 0xFFFF ticks per hour),
-;	variable to store ticks count
+;	address of ticks count stored
 ; Spoils: AH, CX, DX
 %macro tgblm_timer 3
 	tgblm_getDeltaTimeMS %3

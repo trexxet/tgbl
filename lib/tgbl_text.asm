@@ -2,7 +2,7 @@
 
 ; Add constant string
 ; Args: name, string (w/o 0-terminator)
-; Creates a name_len constant containig the length of string
+; Creates a name string and a name_len constant containig the length of string
 %macro tgblm_addConstString 2
 	%1 db %2, 0
 	%1_len equ $ - %1
@@ -49,27 +49,27 @@ tgbl_printString:
 		jb %%line
 %endmacro
 
-; Convert number in memory to decimal ASCII string
-; Args: source address, destination address
+; Convert integer in memory to decimal ASCII string
+; Args: integer address, string address
 ; Spoils AX, BX, DX, SI, DI
-%macro tgblm_numWordToDecASCII 2
+%macro tgblm_intWordToStr 2
 	mov si, %1
 	mov di, %2
 	mov ax, [si]
-	call tgbl_numToDecASCII
+	call tgbl_intToStr
 %endmacro
-%macro tgblm_numByteToDecASCII 2
+%macro tgblm_intByteToStr 2
 	mov si, %1
 	mov di, %2
 	movzx ax, byte [si]
-	call tgbl_numToDecASCII
+	call tgbl_intToStr
 %endmacro
 %macro setOffset 1
 	cmp ax, %1
 	jb .offsetSet
 	inc di
 %endmacro
-tgbl_numToDecASCII:
+tgbl_intToStr:
 	; Set offset for printing
 	setOffset 10
 	setOffset 100

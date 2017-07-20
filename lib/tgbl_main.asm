@@ -1,7 +1,7 @@
 ; TGBL main file
 ; Include it at the beginning of your program
 
-; Fill sectors with zeroes
+; Fill the rest space of sectors with zeroes
 ; Args: number of sectors, beginning of sectors to be filled
 %macro tgblm_endSector 2
 	times 512 * %1 - ($ - %2) db 0
