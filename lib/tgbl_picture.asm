@@ -21,7 +21,11 @@ tgbl_drawPicture:
 	add si, 2
 	.drawLoop:
 		mov ax, [si]
-		stosw
+		test ax, ax
+		jz .nextSymbol
+		mov word [es:di], ax
+		.nextSymbol:
+		add di, 2
 		add si, 2
 		inc ch
 		cmp ch, dh

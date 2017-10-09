@@ -36,7 +36,6 @@ M_key_handler:
 	ret
 
 A_key_handler:
-	tgblm_clearScreen
 	tgblm_drawPicture Ancap, 2, 12
 	ret
 
