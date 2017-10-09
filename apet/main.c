@@ -17,15 +17,16 @@ void final();
 enum { F_READ, F_WRITE };
 void rwFile(uint8_t write, char *name);
 
-struct { uint8_t Y, X; } size, pos;
-uint8_t fg, bg;
-wchar_t chr;
+struct { uint8_t Y, X; } size, pos = {1, 1};
+uint8_t fg = CL_BLACK, bg = CL_LGRAY;
+wchar_t chr = 32;
 uint8_t data[25][160] = {0};
+uint8_t showTransparency = 1;
 
 void init()
 {
 	// Init ncurses
-	setlocale(LC_ALL, "");
+	setlocale(LC_CTYPE, "");
 	initscr();
 	start_color();
 	cbreak();
@@ -35,8 +36,8 @@ void init()
 	// Check window size
 	int height, width;
 	getmaxyx(stdscr, height, width);
-	if ( (height < 32) || (width < 82) )
-		error("Minimum terminal window size is 32x82");
+	if ((height < 33) || (width < 82))
+		error("Minimum terminal window size is 33x82");
 
 	// Check for color support
 	if ((COLORS < 256) || !has_colors())
@@ -46,12 +47,6 @@ void init()
 	for (int i = 0; i < COLOR_NUM; i++)
 		for (int j = 0; j < BGCOLOR_NUM; j++)
 			init_pair(_COLORPAIR(i, j), color[i], color[j]);
-
-	// Init global variables
-	pos.Y = pos.X = 1;
-	chr = 32;
-	fg = CL_BLACK;
-	bg = CL_LGRAY;
 }
 
 void main(int argc, char **argv)
@@ -134,6 +129,9 @@ uint8_t parseKey(int key)
 		case 'k': // Increase width
 			if (size.X < 80) size.X++;
 			break;
+		case 'b': // Toggle transparency highlight
+			showTransparency ^= 1;
+			break;
 		case 'o': // Save
 			return 2;
 		case 't': // Quit
@@ -168,20 +166,28 @@ void redraw()
 				attroff(A_BLINK | A_BOLD);
 			}
 			else
-			{  // Draw symbol
-				SET_PAIR(data[i][j*2 + 1] & 0xF, data[i][j*2 + 1] >> 4);
-				if (data[i][j*2] < 128)
-					mvaddch(i + 2, j + 1, data[i][j*2]);
+				if (data[i][j*2] == 0 && showTransparency)
+				{
+					attron(A_BLINK);
+					mvaddch(i + 2, j + 1, '-');
+					attroff(A_BLINK);
+				}
 				else
-					mvprintw(i + 2, j + 1, "%lc", unicode[data[i][j*2] - 128]);
-				RESET_PAIR;
-			}
+				{  // Draw symbol
+					SET_PAIR(data[i][j*2 + 1] & 0xF, data[i][j*2 + 1] >> 4);
+					if (data[i][j*2] < 128)
+						mvaddch(i + 2, j + 1, data[i][j*2]);
+					else
+						mvprintw(i + 2, j + 1, "%lc", unicode[data[i][j*2] - 128]);
+					RESET_PAIR;
+				}
 		}
 
 	// Draw footer & box
 	rectangle(1, 0, size.Y + 2, size.X + 1);
 	mvprintw(i + 3, 0, "Arrows to move; Q/W to change char; Space to place char; D to delete char\n");
 	printw("A/S to change background; Z/X to change foreground\n");
+	printw("B to toggle transparency highlight\n");
 	printw("U/M to change height; H/K to change width\n");
 	printw("O to save; T to quit");
 	refresh();
