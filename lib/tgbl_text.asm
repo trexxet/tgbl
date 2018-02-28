@@ -19,7 +19,7 @@
 %endmacro
 tgbl_printString:
 	mov al, [si]
-	or al, al
+	test al, al
 	jz .printed
 	stosw
 	inc si
@@ -49,32 +49,32 @@ tgbl_printString:
 		jb %%line
 %endmacro
 
-; Convert integer in memory to decimal ASCII string
+; Convert unsigned integer in memory to decimal ASCII string
 ; Args: integer address, string address
 ; Spoils AX, BX, DX, SI, DI
-%macro tgblm_intWordToStr 2
+%macro tgblm_uintWordToStr 2
 	mov si, %1
 	mov di, %2
 	mov ax, [si]
-	call tgbl_intToStr
+	call tgbl_uintToStr
 %endmacro
-%macro tgblm_intByteToStr 2
+%macro tgblm_uintByteToStr 2
 	mov si, %1
 	mov di, %2
 	movzx ax, byte [si]
-	call tgbl_intToStr
+	call tgbl_uintToStr
 %endmacro
-%macro setOffset 1
+%macro tgblm_uintSetOffset 1
 	cmp ax, %1
 	jb .offsetSet
 	inc di
 %endmacro
-tgbl_intToStr:
+tgbl_uintToStr:
 	; Set offset for printing
-	setOffset 10
-	setOffset 100
-	setOffset 1000
-	setOffset 10000
+	tgblm_uintSetOffset 10
+	tgblm_uintSetOffset 100
+	tgblm_uintSetOffset 1000
+	tgblm_uintSetOffset 10000
 	.offsetSet:
 	mov byte [di + 1], 0
 	push di
@@ -87,7 +87,7 @@ tgbl_intToStr:
 		or dl, 0x30 ; ASCII
 		mov [di], dl
 		dec di
-		or ax, ax
+		test ax, ax
 		jnz .convertLoop
 	pop di
 	ret

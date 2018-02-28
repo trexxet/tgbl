@@ -66,7 +66,7 @@ S_key_handler:
 
 redrawNum:
 	; First, we have to convert number to decimal ASCII string
-	tgblm_intWordToStr sampleNum, sampleNumStr
+	tgblm_uintWordToStr sampleNum, sampleNumStr
 	; Then we clear place for string
 	tgblm_clearString scrHMid + 1, scrWMid - 2, 5
 	; And print it

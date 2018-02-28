@@ -68,7 +68,7 @@ tgbl_initVGA:
 
 ; Fill screen area with char
 ; Args: char, color, upper row, left column, height, width
-; Spoils: AX, CX, DX, DI
+; Spoils: AX, BX, CX, DX, DI
 %macro tgblm_fillScreenArea 6
 	mov al, %1
 	mov ah, %2
@@ -78,25 +78,21 @@ tgbl_initVGA:
 	call tgbl_fillScreenArea
 %endmacro
 tgbl_fillScreenArea:
-	push ax
 	xor cx, cx ; CX - counter (CH - column, CL - row)
 	.fillLoop:
-		pop ax
 		stosw
-		push ax
 		inc cl
 		cmp cl, dl
 		jb .fillLoop
 		; Next line:
 		add di, vramWidth
-		movzx ax, dl ;
-		shl ax, 1    ; DI -= DH * 2
-		sub di, ax   ;
+		movzx bx, dl ;
+		shl bx, 1    ; DI -= DL * 2
+		sub di, bx   ;
 		xor cl, cl
 		inc ch
 		cmp ch, dh
 		jb .fillLoop
-	pop ax
 	ret
 
 ; Clear screen area

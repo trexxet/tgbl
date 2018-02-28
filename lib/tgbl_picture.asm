@@ -16,7 +16,7 @@
 	call tgbl_drawPicture
 %endmacro
 tgbl_drawPicture:
-	mov dx, [si] ; DH contains width, DL contains height
+	mov dx, [si] ; DH = width, DL = height
 	xor cx, cx ; CX - counter (CH - column, CL - row)
 	add si, 2
 	.drawLoop:
