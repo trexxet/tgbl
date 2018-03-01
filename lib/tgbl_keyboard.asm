@@ -1,7 +1,16 @@
 ; TGBL keyboard routines
 
+; Keystroke handlers switcher, enabled by default
+%define KBD_HANDLERS_ENABLED 1
+%define KBD_HANDLERS_DISABLED 0
+tgbl_kbd_handlers_enable db KBD_HANDLERS_ENABLED
 ; Keystroke handlers table pointer
 tgbl_kbd_table equ 0x6b52	; 0x7c00 - 4096 bytes stack - 2 * 0x87
+
+; Enable/disable keystroke handlers
+%macro tgblm_setKeyHandlers 1
+	mov byte [tgbl_kbd_handlers_enable], %1
+%endmacro
 
 ; Clean keyboard handlers table
 ; Spoils: AX, BX
@@ -30,6 +39,9 @@ tgbl_clearKeyHandlersTable:
 ; Keyboard handler
 ; Spoils: AH, BX
 tgbl_keyboardHandler:
+	; Check if handlers enabled
+	cmp byte [tgbl_kbd_handlers_enable], KBD_HANDLERS_DISABLED
+	je .noKey
 	; Get key
 	mov ah, 01h
 	int 16h
@@ -48,6 +60,39 @@ tgbl_keyboardHandler:
 	xor ah, ah
 	int 16h
 	.noKey:
+	ret
+
+; Get ASCII character of the key pressed
+; Returns: AL = ASCII character
+; Spoils: AH
+tgbl_getChar:
+	xor ah, ah
+	int 16h
+	ret
+
+; Read input string until Enter is pressed
+; Args: address of string, max length including zero terminator
+; Spoils: AX, BX, CX, DI
+%macro tgblm_getString 2
+	mov di, %1
+	mov bx, %2
+	call tgbl_getString
+%endmacro
+tgbl_getString:
+	mov cx, 1 ; CX - counter for read symbols
+	.readLoop:
+		cmp cx, bx
+		jae .end
+		xor ah, ah
+		int 16h
+		cmp al, 0x0D ; CR
+		je .end
+		mov byte [di], al
+		inc di
+		inc cx
+		jmp .readLoop
+	.end:
+	mov byte [di], 0
 	ret
 
 ; Keyboard scan codes

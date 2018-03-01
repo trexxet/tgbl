@@ -12,9 +12,9 @@
 tgbl_getVRAMAddr:
 	; 160 = 128 + 32
 	movzx cx, bh
-	shl cx, 5
+	shl cx, 5    ; CX = BH * 32
 	mov di, cx
-	shl di, 2
+	shl di, 2    ; DI = (BH * 32) * 4 = BH * 128
 	add di, cx
 	movzx cx, bl
 	shl cx, 1
