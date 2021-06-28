@@ -1,6 +1,8 @@
 # TGBL
 ##### Text & Graphics BIOS library
 
+[MIGRATED](https://gitlab.com/trexxet/tgbl)
+
 ## What is it?
 A library that helps you write assembler code for BIOS. </br>
 It includes bootloader, functions and macros for printing strings, managing keyboard, drawing ASCII pictures, timers etc.
